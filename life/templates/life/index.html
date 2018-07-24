@@ -1,5 +1,6 @@
 {% load static %}
 
+
 <!DOCTYPE html>
 
 <html>
@@ -7,14 +8,75 @@
 		<title></title>
 
 		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="{% static '/life/vendors/bootstrap/css/bootstrap.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static '/life/vendor/bootstrap/css/bootstrap.css' %}" />
 		<link rel="stylesheet" type="text/css" href="{% static '/life/css/main.css' %}" />
 
-		<script src="{% static '/life/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
-		<script src="{% static '/life/vendors/jquery-ui/jquery-ui.min.js' %}"></script>
+		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static '/life/my.js' %}"></script>
 	</head>
 	<body>
 		<!-- Your layout here -->
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col text-center">
+          <h3>Event Tree</h3>
+        </div>
+      </div>
+      
+      <div class="row">
+        {% for event in events %}
+          {% if event.parent_event == null %}
+            <div class="col text-center">
+              <button id={{event.name}} type="button" class="btn btn-info" onclick="myFunction(event)">
+                {{ event.name }}
+              </button>
+              
+                <div class="row">
+                  <div class="col text-left">
+                    
+                    <p>
+                      {% for outcome in outcomes %}
+                        {% if outcome.parent_event.name == event.name %}
+                          <p class={{outcome.parent_event.name}} style="border-radius: 0px 5px; border: 2px solid #73AD21; display: none;">
+                            {{ outcome.narration }}
+                          </p>
+                        {% endif %}
+                      {% endfor %}
+                  </div>
+                </div>
 
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      
+<!--       <div class="row">
+        <div class="col text-center">
+          <p id="narration">
+            
+          </p>
+        </div>
+      </div> -->
+	  </div>
+    
+    <script>
+      function myFunction(clickEvent) {
+        var narrationPool = document.getElementsByClassName(clickEvent.target.id);
+        var randomIndex = Math.floor(Math.random() * narrationPool.length);
+        var randomNarration = narrationPool[randomIndex];
+        console.log("randomIndex: " + randomIndex);
+        console.log("narrationPool.length: " + narrationPool.length);
+        var n;
+        for (n = 0; n < narrationPool.length; n++) {
+          console.log("n: " + n);
+          if (narrationPool[n] == randomNarration) {
+            narrationPool[n].style.display = "block";
+          } else {
+            narrationPool[n].style.display = "none";
+          }
+        }
+      }
+    </script>
 	</body>
 </html>
